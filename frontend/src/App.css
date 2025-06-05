@@ -1,0 +1,263 @@
+/* General Matrix Theme */
+body {
+    background-color: #000000;
+    color: #00ff00; /* Green text */
+    font-family: "Courier New", Courier, monospace;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrollbars */
+}
+
+.App {
+    text-align: center;
+    padding: 10px;
+}
+
+.App-header {
+    background-color: #0d0d0d;
+    padding: 15px;
+    border-bottom: 1px solid #00ff00;
+    margin-bottom: 20px;
+}
+
+.App-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+}
+
+.server-status {
+    font-size: 0.9em;
+    margin-top: 5px;
+    color: #00cc00;
+}
+
+.status-on {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.status-off {
+    color: #ff0000; /* Red for offline */
+    font-weight: bold;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 10px;
+}
+
+.section-box {
+    background-color: rgba(0, 20, 0, 0.8);
+    border: 1px solid #00ff00;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.section-box h2 {
+    margin-top: 0;
+    border-bottom: 1px dashed #00ff00;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+/* Buttons */
+button {
+    background-color: #003300;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1em;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #005500;
+    box-shadow: 0 0 8px #00ff00;
+}
+
+button:disabled {
+    background-color: #001100;
+    color: #005500;
+    border-color: #005500;
+    cursor: not-allowed;
+}
+
+/* Inputs and Dropzone */
+input[type="text"],
+.target-host-input {
+    background-color: #001100;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 8px;
+    font-family: inherit;
+    margin: 5px 0;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+}
+
+.dropzone {
+    border: 2px dashed #00ff00;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    background-color: rgba(0, 50, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.dropzone.active {
+    background-color: rgba(0, 80, 0, 0.7);
+    border-color: #00dd00;
+}
+
+.dropzone p {
+    margin: 0;
+}
+
+/* Device List */
+.device-list {
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #003300;
+}
+
+.device-list li {
+    padding: 8px;
+    border-bottom: 1px solid #003300;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.device-list li:last-child {
+    border-bottom: none;
+}
+
+.device-list li:hover {
+    background-color: #004400;
+}
+
+.device-list li.selected {
+    background-color: #006600;
+    font-weight: bold;
+}
+
+/* Confirmations Panel */
+.confirmations-panel .confirmation-item {
+    border: 1px solid #005500;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #002200;
+}
+
+.confirmation-item p {
+    margin: 5px 0;
+}
+
+.confirm-btn {
+    background-color: #006600;
+    border-color: #00ff00;
+}
+.confirm-btn:hover {
+    background-color: #008800;
+}
+
+.reject-btn {
+    background-color: #550000;
+    border-color: #ff0000;
+    color: #ff8888;
+}
+.reject-btn:hover {
+    background-color: #770000;
+}
+
+/* Logs Panel */
+.logs-panel .logs-container {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #001000;
+    border: 1px solid #003300;
+    padding: 10px;
+    font-size: 0.8em;
+    text-align: left;
+}
+
+.log-entry {
+    padding: 2px 0;
+    border-bottom: 1px dotted #002200;
+    word-break: break-all;
+}
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    border: 4px solid #005500; /* Light green */
+    border-top: 4px solid #00ff00; /* Green */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-overlay p {
+    color: #00ff00;
+    font-size: 1.2em;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .main-content {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .section-box {
+        width: calc(50% - 10px); /* Two columns on wider screens */
+    }
+    .logs-panel {
+        width: 100%; /* Full width for logs */
+    }
+}
+
+@media (min-width: 1024px) {
+    .section-box {
+        /* Example: could make some sections wider if needed */
+    }
+    .App-header h1 {
+        font-size: 3em;
+    }
+}

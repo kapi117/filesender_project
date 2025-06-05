@@ -1,103 +1,129 @@
-# FileSender
+# FileSender Matrix
 
-A command-line application for transferring files between computers on the same local network.
+A command-line and web-based application for transferring files between computers on the same local network.
 
 ## Features
 
 * **Discoverable Servers**: Servers running `filesender` can be discovered by other instances on the network.
 * **Direct File Transfer**: Send files directly to a chosen recipient.
-* **Recipient Confirmation**: The recipient is prompted to accept or reject incoming files.
-* **Cross-Platform**: Written in Python, should work on any OS with Python installed.
+* **Recipient Confirmation**: The recipient is prompted to accept or reject incoming files (via CLI or Web UI).
+* **Cross-Platform**: Python backend, Web UI.
+* **CLI and Web Interface**: Choose between a command-line interface or a user-friendly web interface.
 
 ## Prerequisites
 
-* Python 3.6+
+* Python 3.7+
+* Node.js and npm (for the web frontend)
 * Computers must be on the same local network.
 
 ## Setup
 
-No special installation is required beyond having Python. The application consists of `filesender.py` and `config.py`.
+1. **Clone/Download the project.**
+2. **Install Python dependencies:**
+
+    ```bash
+    pip install Flask Flask-CORS
+    ```
+
+3. **Setup the Frontend:**
+
+    ```bash
+    cd frontend
+    npm install
+    npm run build
+    cd ..
+    ```
+
+    This will install frontend dependencies and create an optimized build in the `frontend/build` directory.
 
 ## Usage
 
-The application is controlled via the command line.
+The application can be run with a Web UI (recommended for ease of use) or via the traditional CLI.
 
-### 1. Start the Server
+### Web Interface (Recommended)
 
-On the computer that will receive files, open a terminal in the project directory and run:
+1. **Start the application server:**
+    Open a terminal in the project root directory and run:
 
-```bash
-python filesender.py start
-```
+    ```bash
+    python filesender.py
+    ```
 
-The server will start and announce its presence. It will display its IP address and hostname, making it visible to others. It will listen for discovery requests and incoming file transfers until you stop it (e.g., with Ctrl+C).
+    Or explicitly:
 
-### 2. Search for Servers
+    ```bash
+    python filesender.py gui
+    ```
 
-On another computer (or the same one) that wants to send a file or see available servers, open a terminal and run:
+    This will start the Flask backend server (defaulting to port 5000). It will print the URL to access the web interface (e.g., `http://<your-local-ip>:5000`).
 
-```bash
-python filesender.py search
-```
+2. **Open the Web UI in your browser:**
+    Navigate to the URL provided in the terminal.
 
-This command will broadcast a discovery message on the network and list any `filesender` servers that respond. The output will show the hostname and IP address of each found server.
+3. **Using the Web UI:**
+    * **Server Control**: Start/Stop the underlying FileSender server. The server must be running to send/receive files or discover devices.
+    * **Incoming Transfers**: If the server is running and a file is sent to your machine, a prompt will appear in this section allowing you to accept or reject it.
+    * **Discover Devices**: Click "Search Network" to find other FileSender instances (both CLI and GUI servers) on your network. Select a device from the list to set it as the target for sending a file.
+    * **Send File**: Drag and drop a file into the designated area or click to browse. Ensure a target host is selected from the discovered devices list or typed in. Click "Send File".
+    * **Activity Log**: Shows recent actions and messages from the application.
 
-### 3. Send a File
+### Command-Line Interface (CLI)
 
-To send a file, use the `send` command followed by the path to the file and the hostname or IP address of the recipient (as found by the `search` command).
+The CLI still functions as before and uses the same core logic.
 
-```bash
-python filesender.py send [filepath] [hostname_or_ip]
-```
+1. **Start the Server (CLI mode):**
+    On the computer that will receive files, open a terminal in the project directory and run:
 
-Example:
+    ```bash
+    python filesender.py start
+    ```
 
-```bash
-python filesender.py send ./my_document.txt my-laptop
-```
+    The server will start. Incoming file requests will prompt for confirmation in the terminal.
 
-Or using an IP address:
+2. **Search for Servers (CLI mode):**
 
-```bash
-python filesender.py send /path/to/archive.zip 192.168.1.102
-```
+    ```bash
+    python filesender.py search
+    ```
 
-The sender will attempt to connect to the recipient. The recipient (running the `start` command) will be prompted to accept or reject the incoming file.
+    This lists available FileSender servers on the network.
 
-* If the recipient accepts, the file transfer will begin.
-* If the recipient rejects, the sender will be notified.
+3. **Send a File (CLI mode):**
 
-Received files are saved in a `received_files` directory in the location where the `filesender.py start` command was executed.
+    ```bash
+    python filesender.py send [filepath] [hostname_or_ip]
+    ```
+
+    Example:
+
+    ```bash
+    python filesender.py send ./mydoc.txt server-laptop
+    ```
+
+    The recipient (if running in CLI mode) will be prompted in their terminal. If the recipient is using the Web UI, the confirmation will appear there.
 
 ## Configuration
 
-Network settings are in `config.py`:
-
-* `TCP_PORT = 60000`: Port for TCP file transfer.
-* `UDP_PORT = 60001`: Port for UDP discovery.
-* `DISCOVERY_MESSAGE = "FILESENDER_DISCOVERY"`: Message used for server discovery.
-* `BUFFER_SIZE = 4096`: Data chunk size for transfers.
+* **Backend**: Network settings (ports, discovery message) are defined at the top of `filesender_core.py`.
+* **Frontend**: The React app proxies API requests to `http://localhost:5000` during development (see `frontend/package.json`). The Flask server port can be changed when running `python filesender.py gui --port <your_port>`.
 
 ## Firewall Configuration
 
-For `filesender` to work correctly, your system's firewall must allow traffic on the configured UDP and TCP ports:
+For `filesender` to work correctly, your system's firewall must allow traffic on the configured UDP and TCP ports (defaults are UDP 60001 and TCP 60000):
 
-* **UDP Port `60001` (or as configured in `config.py`)**: Must be open for incoming and outgoing traffic for device discovery. UDP broadcasts must be allowed on your network segment.
-* **TCP Port `60000` (or as configured in `config.py`)**: Must be open for incoming traffic on the server machine to receive files, and outgoing on the client machine to send files.
-
-Consult your operating system's or firewall software's documentation for instructions on how to open these ports.
+* **UDP Port (e.g., 60001)**: Must be open for incoming and outgoing traffic for device discovery.
+* **TCP Port (e.g., 60000)**: Must be open for incoming traffic on the server machine to receive files, and outgoing on the client machine to send files.
 
 ## Troubleshooting
 
-* **No servers found**:
-  * Ensure the server instance is running (`python filesender.py start`) on the target machine.
-  * Check that both devices are on the same network.
-  * Verify firewall settings on both machines allow UDP traffic on the discovery port.
-  * Some network configurations might block UDP broadcasts.
+* **Web UI not loading**: Ensure you have run `npm run build` in the `frontend` directory and that the Flask server is running.
+* **No servers found (Web UI or CLI)**:
+  * Ensure the FileSender server is running on target machines (either `python filesender.py` for GUI-managed server, or `python filesender.py start` for CLI server).
+  * Check that all devices are on the same local network.
+  * Verify firewall settings on all machines.
 * **Connection refused when sending**:
-  * Ensure the server instance is running on the target machine.
-  * Verify the hostname or IP address is correct.
-  * Check firewall settings on the server machine to allow TCP traffic on the file transfer port.
-* **File transfer fails**:
-  * Check for network interruptions.
-  * Ensure sufficient disk space on the receiving machine.
+  * Verify server is active on the target machine.
+  * Double-check hostname/IP.
+  * Check firewalls.
+
+Received files (accepted via CLI or UI) are saved in a `received_files` directory in the project root (where `filesender.py` is run).

@@ -1,3 +1,7 @@
 __pycache__/
 .mypy_cache/
 received_files/
+build/
+node_modules/
+.venv/
+_temp_uploads/
